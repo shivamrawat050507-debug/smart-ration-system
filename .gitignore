@@ -1,0 +1,23 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Java / Spring Boot
+**/target/
+**/.mvn/
+*.log
+
+# Node / Vite
+**/node_modules/
+**/dist/
+**/.vite/
+
+# Local env / secrets
+.env
+.env.*
+application-local.properties
+
+# Misc
+coverage/
