@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Alert, Badge, Button, Card, Col, Form, ListGroup, Row, Spinner, Table } from "react-bootstrap";
+import { useEffect, useRef, useState } from "react";
+import { Alert, Badge, Button, Card, Col, Form, ListGroup, Modal, Row, Spinner, Table } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
 import {
   distributeDealerRation,
@@ -12,6 +12,10 @@ const DEMO_QR_CODE = "QR-GRG-D014-RC4421";
 
 function DepotOperationsPage() {
   const { user } = useAuth();
+  const videoRef = useRef(null);
+  const streamRef = useRef(null);
+  const frameRef = useRef(null);
+  const detectorRef = useRef(null);
   const [overview, setOverview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -20,6 +24,13 @@ function DepotOperationsPage() {
   const [scanLoading, setScanLoading] = useState(false);
   const [scanCode, setScanCode] = useState("");
   const [scanResult, setScanResult] = useState(null);
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const [cameraStarting, setCameraStarting] = useState(false);
+  const [cameraError, setCameraError] = useState("");
+
+  useEffect(() => () => {
+    stopCamera();
+  }, []);
 
   useEffect(() => {
     const loadOverview = async () => {
@@ -80,6 +91,94 @@ function DepotOperationsPage() {
       return;
     }
     await runScan(scanCode);
+  };
+
+  const stopCamera = () => {
+    if (frameRef.current) {
+      cancelAnimationFrame(frameRef.current);
+      frameRef.current = null;
+    }
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+      streamRef.current = null;
+    }
+    if (videoRef.current) {
+      videoRef.current.srcObject = null;
+    }
+  };
+
+  const closeCameraModal = () => {
+    stopCamera();
+    setCameraOpen(false);
+    setCameraStarting(false);
+    setCameraError("");
+  };
+
+  const scanVideoFrame = async () => {
+    if (!videoRef.current || !detectorRef.current || scanLoading) {
+      frameRef.current = requestAnimationFrame(scanVideoFrame);
+      return;
+    }
+
+    try {
+      const barcodes = await detectorRef.current.detect(videoRef.current);
+      const qrMatch = barcodes.find((entry) => entry.rawValue);
+      if (qrMatch?.rawValue) {
+        closeCameraModal();
+        await runScan(qrMatch.rawValue);
+        return;
+      }
+    } catch (scannerError) {
+      setCameraError("Camera opened, but QR detection failed on this browser.");
+      closeCameraModal();
+      return;
+    }
+
+    frameRef.current = requestAnimationFrame(scanVideoFrame);
+  };
+
+  const openCameraScanner = async () => {
+    setCameraError("");
+    setError("");
+
+    const Detector = window.BarcodeDetector;
+    if (!Detector) {
+      setCameraError("This browser does not support in-browser QR scanning. Use the QR text field instead.");
+      return;
+    }
+
+    try {
+      const supportedFormats = await Detector.getSupportedFormats();
+      if (!supportedFormats.includes("qr_code")) {
+        setCameraError("This browser does not support QR detection. Use the QR text field instead.");
+        return;
+      }
+
+      setCameraOpen(true);
+      setCameraStarting(true);
+      detectorRef.current = new Detector({ formats: ["qr_code"] });
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "environment" }
+        },
+        audio: false
+      });
+
+      streamRef.current = stream;
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        await videoRef.current.play();
+      }
+
+      setCameraStarting(false);
+      frameRef.current = requestAnimationFrame(scanVideoFrame);
+    } catch (scannerError) {
+      stopCamera();
+      setCameraOpen(false);
+      setCameraStarting(false);
+      setCameraError("Unable to access the device camera. Check camera permission and try again.");
+    }
   };
 
   const handleDealerDistribute = async () => {
@@ -211,10 +310,10 @@ function DepotOperationsPage() {
                 <Button
                   type="button"
                   className="dealer-scan-button"
-                  onClick={() => runScan(DEMO_QR_CODE)}
-                  disabled={scanLoading}
+                  onClick={openCameraScanner}
+                  disabled={scanLoading || cameraStarting}
                 >
-                  {scanLoading ? "Scanning..." : "Scan QR"}
+                  {cameraStarting ? "Opening Camera..." : "Scan QR"}
                 </Button>
                 <Form.Group>
                   <Form.Label className="small text-muted">QR value for scanner demo</Form.Label>
@@ -335,6 +434,31 @@ function DepotOperationsPage() {
             </Card>
           )}
         </div>
+
+        <Modal show={cameraOpen} onHide={closeCameraModal} centered>
+          <Modal.Header closeButton>
+            <Modal.Title>Scan Beneficiary QR</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <div className="dealer-camera-frame">
+              <video ref={videoRef} className="dealer-camera-video" playsInline muted />
+            </div>
+            <p className="small text-muted mt-3 mb-0">
+              Hold the QR code inside the frame. The scan will trigger automatically.
+            </p>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="outline-dark" onClick={closeCameraModal}>
+              Close
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {cameraError ? (
+          <Alert variant="warning" className="mt-3 mb-0">
+            {cameraError}
+          </Alert>
+        ) : null}
       </div>
     );
   }
