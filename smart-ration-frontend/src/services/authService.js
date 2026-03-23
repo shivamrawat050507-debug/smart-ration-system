@@ -1,5 +1,4 @@
 import api from "./api";
-import axios from "axios";
 
 export const registerUser = async (payload) => {
   const response = await api.post("/auth/register", payload);
@@ -12,14 +11,14 @@ export const loginUser = async (payload) => {
 };
 
 export const refreshAccessToken = async (refreshToken) => {
-  const response = await axios.post("http://localhost:8080/api/auth/refresh", {
+  const response = await api.post("/auth/refresh", {
     refreshToken
   });
   return response.data;
 };
 
 export const logoutUser = async (refreshToken) => {
-  const response = await axios.post("http://localhost:8080/api/auth/logout", {
+  const response = await api.post("/auth/logout", {
     refreshToken
   });
   return response.data;

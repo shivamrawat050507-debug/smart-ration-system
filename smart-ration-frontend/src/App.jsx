@@ -3,10 +3,8 @@ import AppNavbar from "./components/AppNavbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
 import LoginPage from "./pages/LoginPage";
-import AdminOrdersPage from "./pages/AdminOrdersPage";
-import AdminProductsPage from "./pages/AdminProductsPage";
-import OrderPage from "./pages/OrderPage";
-import ProductsPage from "./pages/ProductsPage";
+import AdminInsightsPage from "./pages/AdminInsightsPage";
+import DepotOperationsPage from "./pages/DepotOperationsPage";
 import RegisterPage from "./pages/RegisterPage";
 
 function App() {
@@ -27,34 +25,18 @@ function App() {
             }
           />
           <Route
-            path="/products"
+            path="/operations"
             element={
-              <ProtectedRoute>
-                <ProductsPage />
+              <ProtectedRoute roles={["ROLE_DEALER"]}>
+                <DepotOperationsPage />
               </ProtectedRoute>
             }
           />
           <Route
-            path="/order"
-            element={
-              <ProtectedRoute>
-                <OrderPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/products"
+            path="/admin/insights"
             element={
               <ProtectedRoute roles={["ROLE_ADMIN"]}>
-                <AdminProductsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/orders"
-            element={
-              <ProtectedRoute roles={["ROLE_ADMIN"]}>
-                <AdminOrdersPage />
+                <AdminInsightsPage />
               </ProtectedRoute>
             }
           />

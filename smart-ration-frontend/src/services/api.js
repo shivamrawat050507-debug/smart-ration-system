@@ -1,8 +1,10 @@
 import axios from "axios";
 import { clearAuthStorage, getAccessToken, getRefreshToken, setAccessToken } from "../utils/authStorage";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
+
 const api = axios.create({
-  baseURL: "http://localhost:8080/api",
+  baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json"
   }
@@ -33,7 +35,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const tokenResponse = await axios.post("http://localhost:8080/api/auth/refresh", {
+        const tokenResponse = await axios.post(`${API_BASE_URL}/auth/refresh`, {
           refreshToken: getRefreshToken()
         });
         const newAccessToken = tokenResponse.data.accessToken;

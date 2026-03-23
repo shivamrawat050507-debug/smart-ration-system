@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Alert, Button, Card, Col, Form, Row } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import { registerUser } from "../services/authService";
 import { hasMinLength, isEmpty, isValidPhone } from "../utils/validators";
 
@@ -15,6 +16,7 @@ function RegisterPage() {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
@@ -50,13 +52,18 @@ function RegisterPage() {
 
     try {
       setLoading(true);
-      await registerUser(formData);
-      setSuccess("Registration successful. Redirecting to login page...");
-      setTimeout(() => navigate("/login"), 1500);
+      const authResponse = await registerUser(formData);
+      login(authResponse);
+      setSuccess("Registration successful. Redirecting to your dashboard...");
+      setTimeout(() => navigate("/dashboard"), 1000);
     } catch (apiError) {
       if (typeof apiError.response?.data === "object") {
-        const firstMessage = Object.values(apiError.response.data)[0];
-        setError(firstMessage || "Registration failed.");
+        if (apiError.response.data.message) {
+          setError(apiError.response.data.message);
+        } else {
+          const firstMessage = Object.values(apiError.response.data)[0];
+          setError(firstMessage || "Registration failed.");
+        }
       } else {
         setError(apiError.response?.data?.message || "Registration failed.");
       }
@@ -71,8 +78,8 @@ function RegisterPage() {
         <Card className="border-0 shadow-lg auth-card">
           <Card.Body className="p-4 p-md-5">
             <div className="mb-4 text-center">
-              <h2 className="fw-bold">Register</h2>
-              <p className="text-muted mb-0">Create your ration account to order supplies online.</p>
+              <h2 className="fw-bold">Beneficiary Registration</h2>
+              <p className="text-muted mb-0">Enroll a ration card holder into the centralized distribution platform.</p>
             </div>
 
             {error && <Alert variant="danger">{error}</Alert>}

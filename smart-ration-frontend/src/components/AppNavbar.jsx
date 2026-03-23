@@ -1,11 +1,10 @@
-import { Container, Nav, Navbar, Badge, Button } from "react-bootstrap";
+import { Container, Nav, Navbar, Button } from "react-bootstrap";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useCart } from "../context/CartContext";
 
 function AppNavbar() {
   const { isAuthenticated, isAdmin, user, logout } = useAuth();
-  const { totalItems } = useCart();
+  const isDealer = user?.role === "ROLE_DEALER";
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -27,21 +26,15 @@ function AppNavbar() {
                 <Nav.Link as={NavLink} to="/dashboard">
                   Dashboard
                 </Nav.Link>
-                <Nav.Link as={NavLink} to="/products">
-                  Products
-                </Nav.Link>
-                <Nav.Link as={NavLink} to="/order">
-                  Order <Badge bg="primary">{totalItems}</Badge>
-                </Nav.Link>
+                {isDealer && (
+                  <Nav.Link as={NavLink} to="/operations">
+                    Depot Operations
+                  </Nav.Link>
+                )}
                 {isAdmin && (
-                  <>
-                    <Nav.Link as={NavLink} to="/admin/products">
-                      Admin Products
-                    </Nav.Link>
-                    <Nav.Link as={NavLink} to="/admin/orders">
-                      Admin Orders
-                    </Nav.Link>
-                  </>
+                  <Nav.Link as={NavLink} to="/admin/insights">
+                    Admin Insights
+                  </Nav.Link>
                 )}
                 <span className="navbar-text text-muted me-2">
                   Welcome, {user?.name}

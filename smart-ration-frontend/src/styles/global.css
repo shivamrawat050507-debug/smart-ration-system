@@ -1,8 +1,11 @@
 body {
   margin: 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(180deg, #f8fbff 0%, #eef4f7 100%);
-  color: #1f2a37;
+  background:
+    radial-gradient(circle at top left, rgba(214, 230, 221, 0.7), transparent 32%),
+    radial-gradient(circle at top right, rgba(244, 214, 180, 0.55), transparent 28%),
+    linear-gradient(180deg, #f7f3ea 0%, #eef2ec 100%);
+  color: #20302b;
 }
 
 .app-shell {
@@ -14,41 +17,278 @@ body {
 }
 
 .auth-card {
-  border-radius: 1.25rem;
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(12px);
 }
 
 .dashboard-hero {
-  background: linear-gradient(135deg, #d9ecff 0%, #ffffff 100%);
-  border: 1px solid #d7e6f5;
+  background:
+    linear-gradient(135deg, rgba(24, 78, 61, 0.94), rgba(39, 101, 78, 0.85)),
+    linear-gradient(135deg, #184e3d 0%, #2f6d57 100%);
+  border-radius: 1.5rem;
+  color: #fffdf7;
+  box-shadow: 0 20px 50px rgba(27, 57, 47, 0.18);
+}
+
+.metric-card {
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(10px);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fffdf7;
+}
+
+.hero-side-card {
+  min-width: 280px;
+  max-width: 360px;
   border-radius: 1.25rem;
 }
 
-.stat-card {
-  border-radius: 1rem;
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+  color: rgba(255, 253, 247, 0.78);
 }
 
-.product-card {
-  border-radius: 1rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+.lead-text {
+  max-width: 720px;
+  color: rgba(255, 253, 247, 0.88);
+  font-size: 1.05rem;
 }
 
-.product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 1rem 2rem rgba(13, 110, 253, 0.12) !important;
-}
-
-.product-badge {
-  display: inline-flex;
-  width: fit-content;
-  padding: 0.4rem 0.75rem;
+.hero-badge {
   border-radius: 999px;
-  background-color: #e7f1ff;
-  color: #0d6efd;
-  font-size: 0.85rem;
-  font-weight: 600;
+  padding: 0.55rem 0.85rem;
+}
+
+.section-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.feature-pill {
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #f2f0e4 0%, #eef5ec 100%);
+  border: 1px solid #dde7df;
+}
+
+.stock-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-radius: 1rem;
+  background: #f9faf6;
+  border: 1px solid #e4e9df;
+}
+
+.info-box {
+  padding: 0.9rem 1rem;
+  border-radius: 1rem;
+  background: #fffdf6;
+  border-left: 4px solid #d68c45;
+  color: #38443f;
+}
+
+.distribute-button {
+  background: linear-gradient(135deg, #b6482d 0%, #d17b2f 100%);
+  border: none;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.distribute-button:hover,
+.distribute-button:focus {
+  background: linear-gradient(135deg, #9f3d25 0%, #bf6e29 100%);
+}
+
+.receipt-card {
+  padding: 1.25rem;
+  border-radius: 1.25rem;
+  background: linear-gradient(135deg, #f6f0de 0%, #f8fbf4 100%);
+  border: 1px solid #e3dfc8;
+}
+
+.receipt-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.receipt-label {
+  display: block;
+  color: #6c7a72;
+  font-size: 0.82rem;
+  margin-bottom: 0.25rem;
+}
+
+.dealer-screen-shell {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0 2rem;
+}
+
+.dealer-screen-card {
+  width: 100%;
+  max-width: 540px;
+}
+
+.dealer-screen-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.dealer-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #6b7b71;
+  font-size: 0.76rem;
+}
+
+.dealer-scan-panel,
+.dealer-person-card {
+  border-radius: 1.5rem;
+}
+
+.dealer-scan-button,
+.dealer-distribute-button {
+  min-height: 58px;
+  border: none;
+  border-radius: 1.1rem;
+  font-weight: 700;
+  font-size: 1.08rem;
+}
+
+.dealer-scan-button {
+  background: linear-gradient(135deg, #1c5a46 0%, #288365 100%);
+}
+
+.dealer-scan-button:hover,
+.dealer-scan-button:focus,
+.dealer-distribute-button:hover,
+.dealer-distribute-button:focus {
+  border: none;
+}
+
+.dealer-distribute-button {
+  background: linear-gradient(135deg, #178548 0%, #33a95c 100%);
+}
+
+.dealer-demo-link {
+  color: #1c5a46;
+  text-decoration: none;
+}
+
+.dealer-person-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  align-items: end;
+}
+
+.dealer-instruction-card {
+  border-radius: 1.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(28, 52, 43, 0.12);
+}
+
+.dealer-instruction-card.tone-success {
+  background: linear-gradient(180deg, #eff9ef 0%, #daf0dc 100%);
+  border: 1px solid #bedcc0;
+  color: #155d2d;
+}
+
+.dealer-instruction-card.tone-warning {
+  background: linear-gradient(180deg, #fff8e6 0%, #f8e3a9 100%);
+  border: 1px solid #edd387;
+  color: #7b5100;
+}
+
+.dealer-instruction-card.tone-danger {
+  background: linear-gradient(180deg, #fff0ef 0%, #f4d2cf 100%);
+  border: 1px solid #e7b4ae;
+  color: #912a20;
+}
+
+.dealer-instruction-label {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+.dealer-instruction-headline {
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1.05;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.dealer-instruction-support {
+  margin-top: 0.75rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.dealer-reason-text {
+  margin-top: 0.85rem;
+  font-size: 1rem;
+}
+
+.dealer-instruction-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.95rem 1rem;
+  border-radius: 1rem;
+  background: #f8faf4;
+  border: 1px solid #e2e8dc;
+}
+
+.dealer-empty-state {
+  padding: 1rem 0.5rem;
+  text-align: center;
+}
+
+.dealer-empty-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.navbar {
+  background: rgba(255, 255, 255, 0.82) !important;
+  backdrop-filter: blur(10px);
 }
 
 .navbar .nav-link.active {
-  color: #0d6efd !important;
+  color: #1d6b50 !important;
   font-weight: 600;
+}
+
+.table > :not(caption) > * > * {
+  background-color: transparent;
+}
+
+@media (max-width: 767px) {
+  .section-title-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .dealer-person-grid {
+    grid-template-columns: 1fr;
+  }
 }

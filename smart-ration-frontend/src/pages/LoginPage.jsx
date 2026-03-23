@@ -45,7 +45,10 @@ function LoginPage() {
 
     try {
       setLoading(true);
-      const response = await loginUser(formData);
+      const response = await loginUser({
+        rationCardNumber: formData.rationCardNumber.trim(),
+        password: formData.password
+      });
       login(response);
       navigate(location.state?.from?.pathname || "/dashboard");
     } catch (apiError) {
@@ -61,8 +64,8 @@ function LoginPage() {
         <Card className="border-0 shadow-lg auth-card">
           <Card.Body className="p-4 p-md-5">
             <div className="mb-4 text-center">
-              <h2 className="fw-bold">Login</h2>
-              <p className="text-muted mb-0">Access your ration dashboard and orders.</p>
+              <h2 className="fw-bold">Smart Ration Login</h2>
+              <p className="text-muted mb-0">Access beneficiary, dealer, or state operations dashboards.</p>
             </div>
 
             {error && <Alert variant="danger">{error}</Alert>}
@@ -96,7 +99,7 @@ function LoginPage() {
             </Form>
 
             <p className="text-center mt-4 mb-0">
-              New user? <Link to="/register">Create an account</Link>
+              New beneficiary? <Link to="/register">Create an account</Link>
             </p>
           </Card.Body>
         </Card>

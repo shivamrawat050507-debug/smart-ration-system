@@ -10,6 +10,6 @@ public class HomeController {
 
     @GetMapping({"", "/"})
     public ResponseEntity<MessageResponse> home() {
-        return ResponseEntity.ok(new MessageResponse("Smart Ration Backend is running"));
+        return ResponseEntity.ok(new MessageResponse("Smart Digital Ration Distribution backend is running"));
     }
 }
